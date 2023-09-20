@@ -1,12 +1,18 @@
-'use client'
 import Image from 'next/image'
 import searchIcon from '../../public/search.png'
-import beer from '../../public/Kingfisher.jpg'
 import { useEffect, useState } from 'react'
+
+interface Beer {
+  id: number;
+  name: string;
+  abv: number;
+  image_url: string;
+  // Add other properties as needed
+}
 
 export default function Home() {
   const [searchText, setSearchText] = useState('')
-  const [data, setData] = useState([])
+  const [data, setData] = useState<Beer[]>([]); // Specify the type as Beer[]
 
   useEffect(() => {
     logBeers()
@@ -15,7 +21,7 @@ export default function Home() {
   async function logBeers() {
     try {
       const response = await fetch("https://api.punkapi.com/v2/beers");
-      const beers = await response.json();
+      const beers: Beer[] = await response.json();
       setData(beers);
       console.log(beers)
     } catch (error) {
@@ -23,14 +29,14 @@ export default function Home() {
     }
   }
 
-  const searchElement = () =>{
-    const searchedFilterData = data.filter((searchedData, index) => {
-      return (searchedData.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
-      console.log(searchedData.image_url)
-  })
-  setData(searchedFilterData)
+  const searchElement = () => {
+    const searchedFilterData = data.filter((searchedData) => {
+      return searchedData.name.toLowerCase().includes(searchText.toLowerCase())
+    })
+    setData(searchedFilterData)
   }
-  const BeerCard = ({ item }:any) => {
+
+  const BeerCard = ({ item }: { item: Beer }) => {
     return (
       <div className='flex flex-col justify-center h-[300px] w-[220px] items-center shadow-md bg-[#211A75] rounded-lg'>
         <Image
