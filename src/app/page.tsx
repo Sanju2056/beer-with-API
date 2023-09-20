@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import searchIcon from '../../public/search.png'
 import { useEffect, useState } from 'react'
